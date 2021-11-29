@@ -1,7 +1,7 @@
 const db = require("../connection");
 const format = require("pg-format");
 
-const seed = (data) => {
+exports.seed = (data) => {
   const { categoryData, commentData, reviewData, userData } = data;
   // 1. create tables
   return db
@@ -85,7 +85,6 @@ const seed = (data) => {
           review.created_at,
         ];
       });
-      console.log(formattedReviewData);
       const queryString = format(
         `INSERT INTO reviews (title, review_body, designer, review_img_url, votes, category, owner, created_at) VALUES %L`,
         formattedReviewData
@@ -111,4 +110,4 @@ const seed = (data) => {
   q;
 };
 
-module.exports = seed;
+//module.exports = seed;
