@@ -30,7 +30,7 @@ const seed = (data) => {
     })
     .then(() => {
       return db.query(`CREATE TABLE reviews (
-        review_id INT PRIMARY KEY,
+        review_id SERIAL PRIMARY KEY,
         title VARCHAR(150),
         review_body TEXT,
         designer VARCHAR(150),
@@ -43,7 +43,7 @@ const seed = (data) => {
     })
     .then(() => {
       return db.query(`CREATE TABLE comments (
-        comment_id INT PRIMARY KEY,
+        comment_id SERIAL PRIMARY KEY,
         author VARCHAR REFERENCES users(username),
         review_id INT REFERENCES reviews(review_id),
         votes INT DEFAULT 0,
@@ -71,7 +71,44 @@ const seed = (data) => {
         formattedCategoryData
       );
       return db.query(queryString);
+    })
+    .then(() => {
+      const formattedReviewData = reviewData.map((review) => {
+        return [
+          review.title,
+          review.review_body,
+          review.designer,
+          review.review_img_url,
+          review.votes,
+          review.category,
+          review.owner,
+          review.created_at,
+        ];
+      });
+      console.log(formattedReviewData);
+      const queryString = format(
+        `INSERT INTO reviews (title, review_body, designer, review_img_url, votes, category, owner, created_at) VALUES %L`,
+        formattedReviewData
+      );
+      return db.query(queryString);
+    })
+    .then(() => {
+      const formattedCommentData = commentData.map((comment) => {
+        return [
+          comment.author,
+          comment.review_id,
+          comment.votes,
+          comment.created_at,
+          comment.body,
+        ];
+      });
+      const queryString = format(
+        `INSERT INTO comments (author, review_id, votes, created_at, body) VALUES %L`,
+        formattedCommentData
+      );
+      return db.query(queryString);
     });
+  q;
 };
 
 module.exports = seed;
