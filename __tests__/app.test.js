@@ -49,4 +49,13 @@ describe("GET /api/reviews/:review_id", () => {
         );
       });
   });
+
+  test("400: responds with a bad request message when given invalid review_id", () => {
+    return request(app)
+      .get("/api/reviews/hibernianfootballclub")
+      .expect(400)
+      .then((result) => {
+        expect(result.body.msg).toBe("Bad request: Invalid review ID entered");
+      });
+  });
 });
