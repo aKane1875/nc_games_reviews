@@ -1,7 +1,7 @@
 const db = require("../connection");
 const format = require("pg-format");
 
-exports.seed = (data) => {
+const seed = (data) => {
   const { categoryData, commentData, reviewData, userData } = data;
   // 1. create tables
   return db
@@ -110,4 +110,4 @@ exports.seed = (data) => {
   q;
 };
 
-//module.exports = seed;
+module.exports = seed;

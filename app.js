@@ -7,4 +7,9 @@ app.use(express.json());
 
 app.use("/api", apiRouter);
 
+app.use((err, req, res, next) => {
+  console.log(err);
+  res.status(500).send({ msg: "CUSTOM INTERNAL SERVER ERROR MESSAGE" });
+});
+
 module.exports = app;
