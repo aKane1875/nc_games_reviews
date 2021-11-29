@@ -10,3 +10,19 @@ exports.selectReviewById = (review_id) => {
       return response.rows[0];
     });
 };
+
+exports.updateReviewById = (review_id, inc_votes) => {
+  return db
+    .query(`UPDATE reviews SET votes = votes + $2 WHERE review_id = $1`, [
+      review_id,
+      inc_votes,
+    ])
+    .then(() => {
+      return db.query(`SELECT * FROM reviews WHERE review_id = $1`, [
+        review_id,
+      ]);
+    })
+    .then((response) => {
+      return response.rows[0];
+    });
+};

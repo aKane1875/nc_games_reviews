@@ -63,3 +63,16 @@ describe("GET /api/reviews/:review_id", () => {
     return request(app).get("/api/reviews/28").expect(404);
   });
 });
+
+describe("PATCH /api/reviews/:review_id", () => {
+  test("200: increments votes when given a positive number and returns updated review", () => {
+    const votesToAdd = { inc_votes: 10 };
+    return request(app)
+      .patch("/api/reviews/1")
+      .send(votesToAdd)
+      .expect(200)
+      .then((result) => {
+        expect(result.body.updatedReview.votes).toBe(11);
+      });
+  });
+});
