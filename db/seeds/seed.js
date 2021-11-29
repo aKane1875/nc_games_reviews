@@ -1,4 +1,5 @@
 const db = require("../connection");
+const format = require("pg-format");
 
 const seed = (data) => {
   const { categoryData, commentData, reviewData, userData } = data;
@@ -49,9 +50,28 @@ const seed = (data) => {
         created_at DATE,
         body TEXT
       )`);
+    })
+    .then(() => {
+      // 2. insert data
+      const formattedUserData = userData.map((user) => {
+        return [user.username, user.avatar_url, user.name];
+      });
+      const queryString = format(
+        `INSERT INTO users (username, avatar_url, name) VALUES %L`,
+        formattedUserData
+      );
+      return db.query(queryString);
+    })
+    .then(() => {
+      const formattedCategoryData = categoryData.map((category) => {
+        return [category.slug, category.description];
+      });
+      const queryString = format(
+        `INSERT INTO categories (slug, description) VALUES %L`,
+        formattedCategoryData
+      );
+      return db.query(queryString);
     });
-
-  // 2. insert data
 };
 
 module.exports = seed;
