@@ -58,4 +58,8 @@ describe("GET /api/reviews/:review_id", () => {
         expect(result.body.msg).toBe("Bad request: Invalid review ID entered");
       });
   });
+
+  test("404: valid review_id (number) but no record exists", () => {
+    return request(app).get("/api/reviews/28").expect(404);
+  });
 });
