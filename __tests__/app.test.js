@@ -25,6 +25,10 @@ describe("GET /api/categories", () => {
         });
       });
   });
+
+  test("404: path not found", () => {
+    return request(app).get("/api/category").expect(404);
+  });
 });
 
 describe("GET /api/reviews/:review_id", () => {
@@ -165,6 +169,32 @@ describe("GET /api/reviews", () => {
             comment_count: expect.any(String),
           })
         );
+      });
+  });
+
+  test("404: path not found", () => {
+    return request(app).get("/api/category").expect(404);
+  });
+
+  test("200: returned array sorted by query, returns in date order by default", () => {
+    return request(app)
+      .get("/api/reviews")
+      .expect(200)
+      .then((result) => {
+        console.log(result.body);
+        expect(result.body.reviews).toBeSortedBy(
+          result.body.reviews.created_at
+        );
+      });
+  });
+
+  test("400: responds with message to inform user of invalid query", () => {
+    return request(app)
+      .get("/api/reviews?sort_by=pennywise")
+      .expect(400)
+      .then((result) => {
+        console.log(result.body);
+        expect(result.body.msg).toBe("Invalid query, no such column");
       });
   });
 });

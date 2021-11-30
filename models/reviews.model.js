@@ -41,14 +41,34 @@ exports.updateReviewById = (review_id, inc_votes) => {
     });
 };
 
-exports.selectReviews = () => {
-  return db
-    .query(
-      `SELECT owner, title, reviews.review_id, category, review_img_url, reviews.created_at, reviews.votes, COUNT(comments.review_id = reviews.review_id) AS comment_count FROM reviews LEFT JOIN comments ON reviews.review_id = comments.review_id LEFT JOIN users ON reviews.owner = users.username GROUP BY reviews.review_id`
-    )
-    .then((response) => {
-      return response.rows;
+exports.selectReviews = (sort_by = "reviews.created_at") => {
+  //console.log(sort_by);
+  if (
+    ![
+      "owner",
+      "title",
+      "reviews.review_id",
+      "category",
+      "review_img_url",
+      "reviews.created_at",
+      "reviews.votes",
+      "comment_count",
+    ].includes(sort_by)
+  ) {
+    return Promise.reject({
+      status: 400,
+      msg: "Invalid query, no such column",
     });
+  } else {
+    return db
+      .query(
+        `SELECT owner, title, reviews.review_id, category, review_img_url, reviews.created_at, reviews.votes, COUNT(comments.review_id = reviews.review_id) AS comment_count FROM reviews LEFT JOIN comments ON reviews.review_id = comments.review_id LEFT JOIN users ON reviews.owner = users.username GROUP BY reviews.review_id ORDER BY $1 ASC`,
+        [sort_by]
+      )
+      .then((response) => {
+        return response.rows;
+      });
+  }
 };
 
 exports.checkIfReviewExists = (review_id) => {
