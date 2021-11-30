@@ -176,13 +176,25 @@ describe("GET /api/reviews", () => {
     return request(app).get("/api/category").expect(404);
   });
 
-  test("200: returned array sorted by query, returns in date order by default", () => {
+  test("200: returned array sorted by query, returns in descending date order by default", () => {
     return request(app)
-      .get("/api/reviews?sort_by=category")
+      .get("/api/reviews")
       .expect(200)
       .then((result) => {
-        //console.log(result.body);
-        expect(result.body.reviews).toBeSortedBy("category");
+        expect(result.body.reviews).toBeSortedBy("created_at", {
+          descending: true,
+        });
+      });
+  });
+
+  test("200: returned array sorted by query, returns in order of query", () => {
+    return request(app)
+      .get("/api/reviews?sort_by=comment_count")
+      .expect(200)
+      .then((result) => {
+        expect(result.body.reviews).toBeSortedBy("comment_count", {
+          descending: true,
+        });
       });
   });
 
@@ -191,8 +203,46 @@ describe("GET /api/reviews", () => {
       .get("/api/reviews?sort_by=pennywise")
       .expect(400)
       .then((result) => {
-        console.log(result.body);
         expect(result.body.msg).toBe("Invalid query, no such column");
+      });
+  });
+
+  test("200: returned array can be sorted in asc order if requested", () => {
+    return request(app)
+      .get("/api/reviews?order=asc")
+      .expect(200)
+      .then((result) => {
+        expect(result.body.reviews).toBeSortedBy("created_at", {
+          descending: false,
+        });
+      });
+  });
+
+  test("400: responds with message to inform user of order selection", () => {
+    return request(app)
+      .get("/api/reviews?order=largeToSmall")
+      .expect(400)
+      .then((result) => {
+        expect(result.body.msg).toBe(
+          "Invalid order selection, asc or desc only"
+        );
+      });
+  });
+
+  test("200: can filter reviews by category", () => {
+    return request(app)
+      .get("/api/reviews?category=dexterity")
+      .expect(200)
+      .then((result) => {
+        expect(result.body.reviews).toHaveLength(1);
+      });
+  });
+  test("400: Invalid category selected", () => {
+    return request(app)
+      .get("/api/reviews?category=shootingStuff")
+      .expect(404)
+      .then((result) => {
+        expect(result.body.msg).toBe("Category not found");
       });
   });
 });
