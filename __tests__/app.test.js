@@ -55,7 +55,7 @@ describe("GET /api/reviews/:review_id", () => {
       .get("/api/reviews/hibernianfootballclub")
       .expect(400)
       .then((result) => {
-        expect(result.body.msg).toBe("Bad request: Invalid review ID entered");
+        expect(result.body.msg).toBe("Bad request: Invalid data provided");
       });
   });
 
@@ -74,5 +74,43 @@ describe("PATCH /api/reviews/:review_id", () => {
       .then((result) => {
         expect(result.body.updatedReview.votes).toBe(11);
       });
+  });
+
+  test("200: decrements votes when given a negative number and returns updated review", () => {
+    const votesToAdd = { inc_votes: -10 };
+    return request(app)
+      .patch("/api/reviews/1")
+      .send(votesToAdd)
+      .expect(200)
+      .then((result) => {
+        expect(result.body.updatedReview.votes).toBe(-9);
+      });
+  });
+
+  test("400: bad request response sent when given invalid ID", () => {
+    const votesToAdd = { inc_votes: -10 };
+    return request(app)
+      .patch("/api/reviews/batman")
+      .send(votesToAdd)
+      .expect(400)
+      .then((result) => {
+        expect(result.body.msg).toBe("Bad request: Invalid data provided");
+      });
+  });
+
+  test("400: bad request response sent when given invalid votes to add", () => {
+    const votesToAdd = { inc_votes: "number" };
+    return request(app)
+      .patch("/api/reviews/1")
+      .send(votesToAdd)
+      .expect(400)
+      .then((result) => {
+        expect(result.body.msg).toBe("Bad request: Invalid data provided");
+      });
+  });
+
+  test("404: responds with 404 if no record exists", () => {
+    const votesToAdd = { inc_votes: 10 };
+    return request(app).patch("/api/reviews/32").send(votesToAdd).expect(404);
   });
 });
