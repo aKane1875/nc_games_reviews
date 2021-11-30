@@ -55,12 +55,19 @@ describe("GET /api/reviews/:review_id", () => {
       .get("/api/reviews/hibernianfootballclub")
       .expect(400)
       .then((result) => {
-        expect(result.body.msg).toBe("Bad request: Invalid data provided");
+        expect(result.body.msg).toBe(
+          "Invalid request, review ID must be a number"
+        );
       });
   });
 
   test("404: valid review_id (number) but no record exists", () => {
-    return request(app).get("/api/reviews/28").expect(404);
+    return request(app)
+      .get("/api/reviews/28")
+      .expect(404)
+      .then((result) => {
+        expect(result.body.msg).toBe("No review found");
+      });
   });
 });
 
@@ -73,6 +80,19 @@ describe("PATCH /api/reviews/:review_id", () => {
       .expect(200)
       .then((result) => {
         expect(result.body.updatedReview.votes).toBe(11);
+        expect(result.body.updatedReview).toEqual(
+          expect.objectContaining({
+            review_id: expect.any(Number),
+            title: expect.any(String),
+            review_body: expect.any(String),
+            designer: expect.any(String),
+            review_img_url: expect.any(String),
+            votes: expect.any(Number),
+            category: expect.any(String),
+            owner: expect.any(String),
+            created_at: expect.any(String),
+          })
+        );
       });
   });
 
@@ -112,5 +132,29 @@ describe("PATCH /api/reviews/:review_id", () => {
   test("404: responds with 404 if no record exists", () => {
     const votesToAdd = { inc_votes: 10 };
     return request(app).patch("/api/reviews/32").send(votesToAdd).expect(404);
+  });
+});
+
+describe("GET /api/reviews", () => {
+  test("200: responds with an array of reviews with required properties", () => {
+    return request(app)
+      .get("/api/reviews")
+      .expect(200)
+      .then((result) => {
+        expect(result.body.reviews).toBeInstanceOf(Array);
+        expect(result.body.reviews).toHaveLength(13);
+        expect(result.body.reviews[0]).toEqual(
+          expect.objectContaining({
+            owner: expect.any(String),
+            title: expect.any(String),
+            review_id: expect.any(Number),
+            category: expect.any(String),
+            review_img_url: expect.any(String),
+            created_at: expect.any(String),
+            votes: expect.any(Number),
+            comment_count: expect.any(String),
+          })
+        );
+      });
   });
 });

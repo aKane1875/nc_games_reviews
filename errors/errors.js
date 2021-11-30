@@ -1,6 +1,11 @@
-exports.handle400Errors = (err, req, res, next) => {
-  if ((err.code = "22P02")) {
-    res.status(400).send({ msg: "Bad request: Invalid data provided" });
+exports.handleCustomErrors = (err, req, res, next) => {
+  console.log(err);
+  if (err.status) {
+    res.status(err.status).send({ msg: err.msg });
+  } else if (err.code === "22P02") {
+    res
+      .status(400)
+      .send({ msg: "Invalid request, review ID must be a number" });
   } else {
     next(err);
   }
