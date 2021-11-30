@@ -16,6 +16,12 @@ exports.selectReviewById = (review_id) => {
 };
 
 exports.updateReviewById = (review_id, inc_votes) => {
+  if (inc_votes && isNaN(inc_votes)) {
+    return Promise.reject({
+      status: 400,
+      msg: "Invalid request, inc_votes must be a number",
+    });
+  }
   return db
     .query(`UPDATE reviews SET votes = votes + $2 WHERE review_id = $1`, [
       review_id,
@@ -28,7 +34,7 @@ exports.updateReviewById = (review_id, inc_votes) => {
     })
     .then((response) => {
       if (response.rows.length === 0) {
-        return Promise.reject({ status: 400, msg: "Review not found" });
+        return Promise.reject({ status: 404, msg: "Review not found" });
       } else {
         return response.rows[0];
       }

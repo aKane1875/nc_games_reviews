@@ -114,7 +114,9 @@ describe("PATCH /api/reviews/:review_id", () => {
       .send(votesToAdd)
       .expect(400)
       .then((result) => {
-        expect(result.body.msg).toBe("Bad request: Invalid data provided");
+        expect(result.body.msg).toBe(
+          "Invalid request, review ID must be a number"
+        );
       });
   });
 
@@ -125,13 +127,21 @@ describe("PATCH /api/reviews/:review_id", () => {
       .send(votesToAdd)
       .expect(400)
       .then((result) => {
-        expect(result.body.msg).toBe("Bad request: Invalid data provided");
+        expect(result.body.msg).toBe(
+          "Invalid request, inc_votes must be a number"
+        );
       });
   });
 
   test("404: responds with 404 if no record exists", () => {
     const votesToAdd = { inc_votes: 10 };
-    return request(app).patch("/api/reviews/32").send(votesToAdd).expect(404);
+    return request(app)
+      .patch("/api/reviews/32")
+      .send(votesToAdd)
+      .expect(404)
+      .then((result) => {
+        expect(result.body.msg).toBe("Review not found");
+      });
   });
 });
 
