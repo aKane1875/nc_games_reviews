@@ -178,13 +178,11 @@ describe("GET /api/reviews", () => {
 
   test("200: returned array sorted by query, returns in date order by default", () => {
     return request(app)
-      .get("/api/reviews")
+      .get("/api/reviews?sort_by=category")
       .expect(200)
       .then((result) => {
-        console.log(result.body);
-        expect(result.body.reviews).toBeSortedBy(
-          result.body.reviews.created_at
-        );
+        //console.log(result.body);
+        expect(result.body.reviews).toBeSortedBy("category");
       });
   });
 
