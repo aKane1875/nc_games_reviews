@@ -411,7 +411,7 @@ describe("GET /api", () => {
       });
   });
 
-  test.only("404: responds with 404 if error in path", () => {
+  test("404: responds with 404 if error in path", () => {
     return request(app).get("/apeye").expect(404);
   });
 });
