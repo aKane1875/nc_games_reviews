@@ -329,6 +329,36 @@ describe("POST /api/reviews/:review_id/comments", () => {
       });
   });
 
+  test("400: no body provided", () => {
+    const comment = {
+      username: "dav3rid",
+    };
+    return request(app)
+      .post("/api/reviews/2/comments")
+      .send(comment)
+      .expect(400)
+      .then((result) => {
+        expect(result.body.msg).toBe(
+          "Invalid request, posts need both a body an username"
+        );
+      });
+  });
+
+  test("400: no username provided", () => {
+    const comment = {
+      body: "DISAGREE!! IT WAS RUBBISH!!",
+    };
+    return request(app)
+      .post("/api/reviews/3/comments")
+      .send(comment)
+      .expect(400)
+      .then((result) => {
+        expect(result.body.msg).toBe(
+          "Invalid request, posts need both a body an username"
+        );
+      });
+  });
+
   test("404: No review found with that ID", () => {
     const comment = {
       username: "dav3rid",

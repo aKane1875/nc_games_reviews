@@ -19,6 +19,12 @@ exports.selectCommentsByReviewId = (review_id) => {
 };
 
 exports.insertCommentByReviewId = (review_id, username, body) => {
+  if (!username || !body) {
+    return Promise.reject({
+      status: 400,
+      msg: "Invalid request, posts need both a body an username",
+    });
+  }
   return db
     .query(
       `INSERT INTO comments (review_id, author, body) VALUES ($1, $2, $3) RETURNING *`,
