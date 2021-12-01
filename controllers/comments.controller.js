@@ -1,6 +1,8 @@
 const {
   selectCommentsByReviewId,
   insertCommentByReviewId,
+  checkIfCommentExists,
+  removeCommentById,
 } = require("../models/comments.model");
 const { checkIfReviewExists } = require("../models/reviews.model");
 
@@ -23,6 +25,20 @@ exports.postCommentByReviewId = (req, res, next) => {
   ])
     .then(([, newComment]) => {
       res.status(201).send({ newComment });
+    })
+    .catch(next);
+};
+
+exports.deleteCommentById = (req, res, next) => {
+  const { comment_id } = req.params;
+
+  return Promise.all([
+    checkIfCommentExists(comment_id),
+    removeCommentById(comment_id),
+  ])
+
+    .then(([]) => {
+      res.status(204).send("deleted");
     })
     .catch(next);
 };

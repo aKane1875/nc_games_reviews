@@ -373,3 +373,29 @@ describe("POST /api/reviews/:review_id/comments", () => {
       });
   });
 });
+
+describe("DELETE /api/comments/:comment_id", () => {
+  test("204: deletes comment and responds with 204 status", () => {
+    return request(app).delete("/api/comments/1").expect(204);
+  });
+
+  test("400: bad request, invalid ID", () => {
+    return request(app)
+      .delete("/api/comments/Hibernian")
+      .expect(400)
+      .then((result) => {
+        expect(result.body.msg).toBe(
+          "Invalid request, review ID must be a number"
+        );
+      });
+  });
+
+  test("404: comment not found", () => {
+    return request(app)
+      .delete("/api/comments/12")
+      .expect(404)
+      .then((result) => {
+        expect(result.body.msg).toBe("Comment not found");
+      });
+  });
+});
