@@ -250,12 +250,13 @@ describe("GET /api/reviews", () => {
 describe("GET /api/reviews/:review_id/comments", () => {
   test.only("200: responds with an array of comments for a specific review ID", () => {
     return request(app)
-      .get("/api/reviews/5/comments")
+      .get("/api/reviews/3/comments")
       .expect(200)
       .then((result) => {
-        expect(result.body).toBeInstanceOf(Array);
+        console.log(result.body);
+        expect(result.body.comments).toBeInstanceOf(Array);
         result.body.comments.forEach((comment) => {
-          expect(category).toEqual(
+          expect(comment).toEqual(
             expect.objectContaining({
               comment_id: expect.any(Number),
               votes: expect.any(Number),
