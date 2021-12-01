@@ -1,6 +1,12 @@
 const express = require("express");
-const { getCommentsByReviewId } = require("../controllers/comments.controller");
+const {
+  getCommentsByReviewId,
+  postCommentByReviewId,
+} = require("../controllers/comments.controller");
 const commentsRouter = express.Router({ mergeParams: true });
 
-commentsRouter.route("/").get(getCommentsByReviewId);
+commentsRouter
+  .route("/")
+  .get(getCommentsByReviewId)
+  .post(postCommentByReviewId);
 module.exports = commentsRouter;

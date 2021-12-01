@@ -70,7 +70,7 @@ describe("GET /api/reviews/:review_id", () => {
       .get("/api/reviews/28")
       .expect(404)
       .then((result) => {
-        expect(result.body.msg).toBe("No review found");
+        expect(result.body.msg).toBe("Review not found");
       });
   });
 });
@@ -248,12 +248,11 @@ describe("GET /api/reviews", () => {
 });
 
 describe("GET /api/reviews/:review_id/comments", () => {
-  test.only("200: responds with an array of comments for a specific review ID", () => {
+  test("200: responds with an array of comments for a specific review ID", () => {
     return request(app)
       .get("/api/reviews/3/comments")
       .expect(200)
       .then((result) => {
-        console.log(result.body);
         expect(result.body.comments).toBeInstanceOf(Array);
         result.body.comments.forEach((comment) => {
           expect(comment).toEqual(
@@ -266,6 +265,81 @@ describe("GET /api/reviews/:review_id/comments", () => {
             })
           );
         });
+      });
+  });
+
+  test("400: responds with bad request message when given invalid review_id", () => {
+    return request(app)
+      .get("/api/reviews/Hibernian/comments")
+      .expect(400)
+      .then((result) => {
+        expect(result.body.msg).toBe(
+          "Invalid request, review ID must be a number"
+        );
+      });
+  });
+
+  test("404: no comments found for that review_id", () => {
+    return request(app)
+      .get("/api/reviews/1/comments")
+      .expect(404)
+      .then((result) => {
+        expect(result.body.msg).toBe("No comments found for this review");
+      });
+  });
+});
+
+describe("POST /api/reviews/:review_id/comments", () => {
+  test("201: posts new comment and returns the posted comment", () => {
+    const comment = {
+      username: "dav3rid",
+      body: "DISAGREE!!  IT WAS RUBBISH!!",
+    };
+    return request(app)
+      .post("/api/reviews/1/comments")
+      .send(comment)
+      .expect(201)
+      .then((newComment) => {
+        expect(newComment.body.newComment).toEqual(
+          expect.objectContaining({
+            comment_id: expect.any(Number),
+            author: expect.any(String),
+            review_id: expect.any(Number),
+            votes: expect.any(Number),
+            body: expect.any(String),
+          })
+        );
+        expect(newComment.body.newComment.comment_id).toBe(7);
+      });
+  });
+
+  test("400: invalid review_id given", () => {
+    const comment = {
+      username: "dav3rid",
+      body: "DISAGREE!!  IT WAS RUBBISH!!",
+    };
+    return request(app)
+      .post("/api/reviews/hibernian/comments")
+      .send(comment)
+      .expect(400)
+      .then((result) => {
+        expect(result.body.msg).toBe(
+          "Invalid request, review ID must be a number"
+        );
+      });
+  });
+
+  test("404: No review found with that ID", () => {
+    const comment = {
+      username: "dav3rid",
+      body: "DISAGREE!!  IT WAS RUBBISH!!",
+    };
+    return request(app)
+      .post("/api/reviews/25/comments")
+      .send(comment)
+      .expect(404)
+      .then((result) => {
+        expect(result.body.msg).toBe("Review not found");
       });
   });
 });

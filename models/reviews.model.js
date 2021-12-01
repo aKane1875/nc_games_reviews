@@ -7,11 +7,7 @@ exports.selectReviewById = (review_id) => {
       [review_id]
     )
     .then((response) => {
-      if (response.rows.length === 0) {
-        return Promise.reject({ status: 404, msg: "No review found" });
-      } else {
-        return response.rows[0];
-      }
+      return response.rows[0];
     });
 };
 
@@ -33,11 +29,7 @@ exports.updateReviewById = (review_id, inc_votes) => {
       ]);
     })
     .then((response) => {
-      if (response.rows.length === 0) {
-        return Promise.reject({ status: 404, msg: "Review not found" });
-      } else {
-        return response.rows[0];
-      }
+      return response.rows[0];
     });
 };
 

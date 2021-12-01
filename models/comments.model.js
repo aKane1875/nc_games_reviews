@@ -7,6 +7,24 @@ exports.selectCommentsByReviewId = (review_id) => {
       [review_id]
     )
     .then((response) => {
-      return response.rows;
+      if (response.rows.length === 0) {
+        return Promise.reject({
+          status: 404,
+          msg: "No comments found for this review",
+        });
+      } else {
+        return response.rows;
+      }
+    });
+};
+
+exports.insertCommentByReviewId = (review_id, username, body) => {
+  return db
+    .query(
+      `INSERT INTO comments (review_id, author, body) VALUES ($1, $2, $3) RETURNING *`,
+      [review_id, username, body]
+    )
+    .then((response) => {
+      return response.rows[0];
     });
 };
