@@ -401,7 +401,7 @@ describe("DELETE /api/comments/:comment_id", () => {
 });
 
 describe("GET /api", () => {
-  test.only("200: responds with a JSON describing all available endpoints", () => {
+  test("200: responds with a JSON describing all available endpoints", () => {
     return request(app)
       .get("/api")
       .expect(200)
@@ -412,5 +412,26 @@ describe("GET /api", () => {
 
   test("404: responds with 404 if error in path", () => {
     return request(app).get("/apeye").expect(404);
+  });
+});
+
+describe("GET /api/users", () => {
+  test("200: responds with an array of all usernames in objects", () => {
+    return request(app)
+      .get("/api/users")
+      .expect(200)
+      .then(
+        expect((result) => {
+          result.body.users.forEach((user) => {
+            expect.objectContaining({
+              username: expect.any(String),
+            });
+          });
+        })
+      );
+  });
+
+  test("404: responds with 404 if error in path", () => {
+    return request(app).get("/api/yousers").expect(404);
   });
 });
