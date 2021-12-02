@@ -98,7 +98,7 @@
   "POST /api/reviews/:review_id/comments": {
     "description": "Posts a new comment to the database and serves the posted comment",
     "requests": { "username": "your username", "body": "comment content" },
-    "expectedResponse": {
+    "exampleResponse": {
       "updatedReview": {
         "review_id": 1,
         "title": "Agricola",
@@ -118,13 +118,23 @@
 
   "GET /api/users": {
     "description": "Serves an array of objects containing usernames for all users",
-    "expectedResponse": {
+    "exampleResponse": {
       "users": [
         { "username": "mallionaire" },
         { "username": "philippaclaire9" },
         { "username": "bainesface" },
         { "username": "dav3rid" }
       ]
+    }
+  },
+  "GET /api/users/:username": {
+    "description": "Serves a user object with username, avatar_url and name properties",
+    "exampleResponse": {
+      "user": {
+        "username": "mallionaire",
+        "avatar_url": "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg",
+        "name": "haz"
+      }
     }
   }
 }

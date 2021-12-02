@@ -421,17 +421,46 @@ describe("GET /api/users", () => {
       .get("/api/users")
       .expect(200)
       .then((result) => {
-        expect(
-          result.body.users.forEach((user) => {
+        expect(result.body.users).toBeInstanceOf(Array);
+        expect(result.body.users).toHaveLength(4);
+        result.body.users.forEach((user) => {
+          expect(user).toEqual(
             expect.objectContaining({
               username: expect.any(String),
-            });
-          })
-        );
+            })
+          );
+        });
       });
   });
 
   test("404: responds with 404 if error in path", () => {
     return request(app).get("/api/yousers").expect(404);
+  });
+});
+
+describe("GET /api/users/:username", () => {
+  test("200: Responds with a user object contaning username, avatar_url & name", () => {
+    return request(app)
+      .get("/api/users/mallionaire")
+      .expect(200)
+      .then((result) => {
+        console.log(result.body);
+        expect(result.body.user).toEqual(
+          expect.objectContaining({
+            username: expect.any(String),
+            avatar_url: expect.any(String),
+            name: expect.any(String),
+          })
+        );
+      });
+  });
+
+  test("404: Responds with a user object contaning username, avatar_url & name", () => {
+    return request(app)
+      .get("/api/users/freddykrueger")
+      .expect(404)
+      .then((result) => {
+        expect(result.body.msg).toBe("No such username found");
+      });
   });
 });
