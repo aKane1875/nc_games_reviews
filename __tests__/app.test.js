@@ -150,11 +150,12 @@ describe("PATCH /api/reviews/:review_id", () => {
 });
 
 describe("GET /api/reviews", () => {
-  test("200: responds with an array of reviews with required properties", () => {
+  test.only("200: responds with an array of reviews with required properties", () => {
     return request(app)
       .get("/api/reviews")
       .expect(200)
       .then((result) => {
+        console.log(result.body.reviews);
         expect(result.body.reviews).toBeInstanceOf(Array);
         expect(result.body.reviews).toHaveLength(13);
         expect(result.body.reviews[0]).toEqual(
