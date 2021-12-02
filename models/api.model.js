@@ -8,7 +8,7 @@ exports.selectRoutes = () => {
       console.log(response);
       if (err) {
         return Promise.reject({ status: 400, msg: "Incorrect path to api" });
-      } else return response;
+      } else return JSON.parse(response);
     }
   );
 };
