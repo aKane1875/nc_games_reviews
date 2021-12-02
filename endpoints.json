@@ -24,6 +24,7 @@
       "p - represents page number"
     ],
     "exampleResponse": {
+      "total_count": 1,
       "reviews": [
         {
           "title": "One Night Ultimate Werewolf",
@@ -34,8 +35,7 @@
           "created_at": "2021-01-18T00:00:00.000Z",
           "votes": 5
         }
-      ],
-      "total_count": 1
+      ]
     }
   },
   "GET /api/reviews/:review_id": {
