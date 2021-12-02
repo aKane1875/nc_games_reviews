@@ -275,6 +275,15 @@ describe("GET /api/reviews", () => {
         expect(result.body.msg).toBe("Invalid p query, must be a number");
       });
   });
+
+  test("200: Adds a total_count property to return object with cout of all reviews in the array", () => {
+    return request(app)
+      .get("/api/reviews")
+      .expect(200)
+      .then((result) => {
+        expect(result.body.total_count).toBe(13);
+      });
+  });
 });
 
 describe("GET /api/reviews/:review_id/comments", () => {
