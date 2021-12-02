@@ -15,8 +15,14 @@
     }
   },
   "GET /api/reviews": {
-    "description": "serves an array of all reviews",
-    "queries": ["category", "sort_by", "order", "limit"],
+    "description": "serves an array of all reviews which can be filtered by category, arranged by column, have asc or desc order and through limit and p has pagination",
+    "queries": [
+      "category",
+      "sort_by",
+      "order",
+      "limit",
+      "p - represents page number"
+    ],
     "exampleResponse": {
       "reviews": [
         {
