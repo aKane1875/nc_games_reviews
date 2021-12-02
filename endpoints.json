@@ -15,7 +15,7 @@
     }
   },
   "GET /api/reviews": {
-    "description": "serves an array of all reviews which can be filtered by category, arranged by column, have asc or desc order and through limit and p has pagination along with a tital count of all reviews in selection",
+    "description": "serves an array of all reviews which can be filtered by category, arranged by column, have asc or desc order and through limit and p has pagination along with a total count of all reviews in selection",
     "queries": [
       "category",
       "sort_by",
@@ -57,8 +57,8 @@
     }
   },
   "GET /api/reviews/:review_id/comments": {
-    "description": "serves an array of comments relating to a specific review",
-    "queries": [],
+    "description": "serves an array of comments relating to a specific review, can be limited and given a page number (p) offering pagination",
+    "queries": ["limit", "p"],
     "exampleResponse": {
       "comments": [
         {

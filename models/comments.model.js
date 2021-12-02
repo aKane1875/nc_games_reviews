@@ -1,10 +1,24 @@
 const db = require("../db/connection");
 
-exports.selectCommentsByReviewId = (review_id) => {
+exports.selectCommentsByReviewId = (review_id, limit = null, p = 0) => {
+  if (isNaN(limit) && limit !== null) {
+    return Promise.reject({
+      status: 400,
+      msg: "Invalid limit input, must be a number",
+    });
+  }
+  if (isNaN(p)) {
+    return Promise.reject({
+      status: 400,
+      msg: "Invalid p query, must be a number",
+    });
+  } else if (p > 0) {
+    p = (p - 1) * limit;
+  }
   return db
     .query(
-      `SELECT comment_id, comments.votes, comments.created_at, author, body FROM comments LEFT JOIN users ON comments.author = users.username LEFT JOIN reviews ON comments.review_id = reviews.review_id WHERE reviews.review_id = $1;`,
-      [review_id]
+      `SELECT comment_id, comments.votes, comments.created_at, author, body FROM comments LEFT JOIN users ON comments.author = users.username LEFT JOIN reviews ON comments.review_id = reviews.review_id WHERE reviews.review_id = $1 LIMIT $2 OFFSET $3;`,
+      [review_id, limit, p]
     )
     .then((response) => {
       if (response.rows.length === 0) {

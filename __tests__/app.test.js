@@ -324,6 +324,40 @@ describe("GET /api/reviews/:review_id/comments", () => {
         expect(result.body.msg).toBe("No comments found for this review");
       });
   });
+
+  test("200: accepts limit query to limit number of responses", () => {
+    return request(app)
+      .get("/api/reviews/2/comments?limit=2")
+      .expect(200)
+      .then((result) => {
+        expect(result.body.comments).toHaveLength(2);
+      });
+  });
+
+  test("400: Invalid limit query provided", () => {
+    return request(app)
+      .get("/api/reviews/2/comments?limit=two")
+      .then((result) => {
+        expect(result.body.msg).toBe("Invalid limit input, must be a number");
+      });
+  });
+
+  test("200: accepts p (page) query to add pagination", () => {
+    return request(app)
+      .get("/api/reviews/2/comments?limit=2&p=2")
+      .expect(200)
+      .then((result) => {
+        expect(result.body.comments).toHaveLength(1);
+      });
+  });
+
+  test("400: Invalid p query provided", () => {
+    return request(app)
+      .get("/api/reviews/2/comments?limit=10&p=two")
+      .then((result) => {
+        expect(result.body.msg).toBe("Invalid p query, must be a number");
+      });
+  });
 });
 
 describe("POST /api/reviews/:review_id/comments", () => {

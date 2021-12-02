@@ -9,7 +9,8 @@ const { checkIfReviewExists } = require("../models/reviews.model");
 
 exports.getCommentsByReviewId = (req, res, next) => {
   const { review_id } = req.params;
-  selectCommentsByReviewId(review_id)
+  const { limit, p } = req.query;
+  selectCommentsByReviewId(review_id, limit, p)
     .then((comments) => {
       res.status(200).send({ comments });
     })
