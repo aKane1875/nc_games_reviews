@@ -129,11 +129,26 @@
   },
   "GET /api/users/:username": {
     "description": "Serves a user object with username, avatar_url and name properties",
+    "requests": { "inc_votes": "Number" },
     "exampleResponse": {
       "user": {
         "username": "mallionaire",
         "avatar_url": "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg",
         "name": "haz"
+      }
+    }
+  },
+  "PATCH /api/comments/:comment_id": {
+    "description": "Updates an existing review by adding or removing votes as needed, serves an updated review object",
+    "requests": { "inc_votes": "Number" },
+    "exampleResponse": {
+      "updatedComment": {
+        "comment_id": 2,
+        "author": "mallionaire",
+        "review_id": 3,
+        "votes": 23,
+        "created_at": "2021-01-18T00:00:00.000Z",
+        "body": "My dog loved this game too!"
       }
     }
   }

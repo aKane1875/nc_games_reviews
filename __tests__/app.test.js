@@ -150,12 +150,11 @@ describe("PATCH /api/reviews/:review_id", () => {
 });
 
 describe("GET /api/reviews", () => {
-  test.only("200: responds with an array of reviews with required properties", () => {
+  test("200: responds with an array of reviews with required properties", () => {
     return request(app)
       .get("/api/reviews")
       .expect(200)
       .then((result) => {
-        console.log(result.body.reviews);
         expect(result.body.reviews).toBeInstanceOf(Array);
         expect(result.body.reviews).toHaveLength(13);
         expect(result.body.reviews[0]).toEqual(
@@ -445,7 +444,6 @@ describe("GET /api/users/:username", () => {
       .get("/api/users/mallionaire")
       .expect(200)
       .then((result) => {
-        console.log(result.body);
         expect(result.body.user).toEqual(
           expect.objectContaining({
             username: expect.any(String),
@@ -462,6 +460,40 @@ describe("GET /api/users/:username", () => {
       .expect(404)
       .then((result) => {
         expect(result.body.msg).toBe("No such username found");
+      });
+  });
+});
+
+describe("PATCH /api/comments/:comment_id", () => {
+  test("200: increments votes in comment when given a positive number and returns updated comment", () => {
+    const newVotes = { inc_votes: 10 };
+    return request(app)
+      .patch("/api/comments/2")
+      .send(newVotes)
+      .expect(200)
+      .then((result) => {
+        expect(result.body.updatedComment).toEqual(
+          expect.objectContaining({
+            comment_id: expect.any(Number),
+            author: expect.any(String),
+            review_id: expect.any(Number),
+            votes: expect.any(Number),
+            created_at: expect.any(String),
+            body: expect.any(String),
+          })
+        );
+        expect(result.body.updatedComment.votes).toBe(23);
+      });
+  });
+  test("200: decrements votes in comment when given a positive number and returns updated comment", () => {
+    const newVotes = { inc_votes: -10 };
+    return request(app)
+      .patch("/api/comments/1")
+      .send(newVotes)
+      .expect(200)
+      .then((result) => {
+        console.log(result.body);
+        expect(result.body.updatedComment.votes).toBe(6);
       });
   });
 });
