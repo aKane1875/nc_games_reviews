@@ -37,7 +37,8 @@ exports.selectReviews = (
   sort_by = "reviews.created_at",
   order = "desc",
   category,
-  limit = null
+  limit = null,
+  p = 0
 ) => {
   if (
     ![
@@ -61,9 +62,12 @@ exports.selectReviews = (
       msg: "Invalid order selection, asc or desc only",
     });
   } else if (category) {
+    if (p > 0) {
+      p = (p - 1) * limit;
+    }
     return db
       .query(
-        `SELECT owner, title, reviews.review_id, category, review_img_url, reviews.created_at, reviews.votes, COUNT(comments.review_id = reviews.review_id) AS comment_count FROM reviews LEFT JOIN comments ON reviews.review_id = comments.review_id LEFT JOIN users ON reviews.owner = users.username WHERE category = '${category}' GROUP BY reviews.review_id ORDER BY ${sort_by} ${order} LIMIT ${limit}`
+        `SELECT owner, title, reviews.review_id, category, review_img_url, reviews.created_at, reviews.votes, COUNT(comments.review_id = reviews.review_id) AS comment_count FROM reviews LEFT JOIN comments ON reviews.review_id = comments.review_id LEFT JOIN users ON reviews.owner = users.username WHERE category = '${category}' GROUP BY reviews.review_id ORDER BY ${sort_by} ${order} LIMIT ${limit} OFFSET ${p}`
       )
       .then((response) => {
         if (response.rows.length === 0) {
@@ -76,9 +80,12 @@ exports.selectReviews = (
         }
       });
   } else {
+    if (p > 0) {
+      p = (p - 1) * limit;
+    }
     return db
       .query(
-        `SELECT owner, title, reviews.review_id, category, review_img_url, reviews.created_at, reviews.votes, COUNT(comments.review_id = reviews.review_id) AS comment_count FROM reviews LEFT JOIN comments ON reviews.review_id = comments.review_id LEFT JOIN users ON reviews.owner = users.username GROUP BY reviews.review_id ORDER BY ${sort_by} ${order} LIMIT ${limit}`
+        `SELECT owner, title, reviews.review_id, category, review_img_url, reviews.created_at, reviews.votes, COUNT(comments.review_id = reviews.review_id) AS comment_count FROM reviews LEFT JOIN comments ON reviews.review_id = comments.review_id LEFT JOIN users ON reviews.owner = users.username GROUP BY reviews.review_id ORDER BY ${sort_by} ${order} LIMIT ${limit} OFFSET ${p}`
       )
       .then((response) => {
         return response.rows;

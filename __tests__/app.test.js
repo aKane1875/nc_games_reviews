@@ -250,6 +250,15 @@ describe("GET /api/reviews", () => {
         expect(result.body.reviews).toHaveLength(5);
       });
   });
+
+  test("200: accepts p (page) query to add pagination", () => {
+    return request(app)
+      .get("/api/reviews?sort_by=reviews.review_id&limit=10&p=2&cateory=")
+      .expect(200)
+      .then((result) => {
+        expect(result.body.reviews).toHaveLength(3);
+      });
+  });
 });
 
 describe("GET /api/reviews/:review_id/comments", () => {
