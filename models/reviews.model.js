@@ -61,6 +61,16 @@ exports.selectReviews = (
       status: 400,
       msg: "Invalid order selection, asc or desc only",
     });
+  } else if (isNaN(limit) && limit !== null) {
+    return Promise.reject({
+      status: 400,
+      msg: "Invalid limit input, must be a number",
+    });
+  } else if (isNaN(p)) {
+    return Promise.reject({
+      status: 400,
+      msg: "Invalid p query, must be a number",
+    });
   } else if (category) {
     if (p > 0) {
       p = (p - 1) * limit;

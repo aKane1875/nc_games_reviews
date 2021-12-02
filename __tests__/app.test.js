@@ -251,12 +251,28 @@ describe("GET /api/reviews", () => {
       });
   });
 
+  test("400: Invalid limit query provided", () => {
+    return request(app)
+      .get("/api/reviews?limit=twenty")
+      .then((result) => {
+        expect(result.body.msg).toBe("Invalid limit input, must be a number");
+      });
+  });
+
   test("200: accepts p (page) query to add pagination", () => {
     return request(app)
-      .get("/api/reviews?sort_by=reviews.review_id&limit=10&p=2&cateory=")
+      .get("/api/reviews?sort_by=reviews.review_id&limit=10&p=2")
       .expect(200)
       .then((result) => {
         expect(result.body.reviews).toHaveLength(3);
+      });
+  });
+
+  test("400: Invalid p query provided", () => {
+    return request(app)
+      .get("/api/reviews?limit=10&p=two")
+      .then((result) => {
+        expect(result.body.msg).toBe("Invalid p query, must be a number");
       });
   });
 });
