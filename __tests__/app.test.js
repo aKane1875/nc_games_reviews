@@ -401,7 +401,7 @@ describe("DELETE /api/comments/:comment_id", () => {
 });
 
 describe("GET /api", () => {
-  test("200: responds with a JSON describing all available endpoints", () => {
+  test.only("200: responds with a JSON describing all available endpoints", () => {
     return request(app)
       .get("/api")
       .expect(200)
