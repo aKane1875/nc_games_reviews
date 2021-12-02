@@ -36,7 +36,8 @@ exports.updateReviewById = (review_id, inc_votes) => {
 exports.selectReviews = (
   sort_by = "reviews.created_at",
   order = "desc",
-  category
+  category,
+  limit = null
 ) => {
   if (
     ![
@@ -62,7 +63,7 @@ exports.selectReviews = (
   } else if (category) {
     return db
       .query(
-        `SELECT owner, title, reviews.review_id, category, review_img_url, reviews.created_at, reviews.votes, COUNT(comments.review_id = reviews.review_id) AS comment_count FROM reviews LEFT JOIN comments ON reviews.review_id = comments.review_id LEFT JOIN users ON reviews.owner = users.username WHERE category = '${category}' GROUP BY reviews.review_id ORDER BY ${sort_by} ${order}  `
+        `SELECT owner, title, reviews.review_id, category, review_img_url, reviews.created_at, reviews.votes, COUNT(comments.review_id = reviews.review_id) AS comment_count FROM reviews LEFT JOIN comments ON reviews.review_id = comments.review_id LEFT JOIN users ON reviews.owner = users.username WHERE category = '${category}' GROUP BY reviews.review_id ORDER BY ${sort_by} ${order} LIMIT ${limit}`
       )
       .then((response) => {
         if (response.rows.length === 0) {
@@ -77,7 +78,7 @@ exports.selectReviews = (
   } else {
     return db
       .query(
-        `SELECT owner, title, reviews.review_id, category, review_img_url, reviews.created_at, reviews.votes, COUNT(comments.review_id = reviews.review_id) AS comment_count FROM reviews LEFT JOIN comments ON reviews.review_id = comments.review_id LEFT JOIN users ON reviews.owner = users.username GROUP BY reviews.review_id ORDER BY ${sort_by} ${order}`
+        `SELECT owner, title, reviews.review_id, category, review_img_url, reviews.created_at, reviews.votes, COUNT(comments.review_id = reviews.review_id) AS comment_count FROM reviews LEFT JOIN comments ON reviews.review_id = comments.review_id LEFT JOIN users ON reviews.owner = users.username GROUP BY reviews.review_id ORDER BY ${sort_by} ${order} LIMIT ${limit}`
       )
       .then((response) => {
         return response.rows;

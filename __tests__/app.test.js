@@ -241,6 +241,15 @@ describe("GET /api/reviews", () => {
         expect(result.body.msg).toBe("Category not found");
       });
   });
+
+  test("200: accepts limit query to limit number of responses", () => {
+    return request(app)
+      .get("/api/reviews?limit=5")
+      .expect(200)
+      .then((result) => {
+        expect(result.body.reviews).toHaveLength(5);
+      });
+  });
 });
 
 describe("GET /api/reviews/:review_id/comments", () => {
