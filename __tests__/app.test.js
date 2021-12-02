@@ -406,7 +406,6 @@ describe("GET /api", () => {
       .get("/api")
       .expect(200)
       .then((result) => {
-        console.log(result.body);
         expect(result.body).toBeInstanceOf(Object);
       });
   });
