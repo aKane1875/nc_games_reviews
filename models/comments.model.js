@@ -54,6 +54,12 @@ exports.removeCommentById = (comment_id) => {
 };
 
 exports.updateCommentById = (comment_id, inc_votes) => {
+  if (inc_votes && isNaN(inc_votes)) {
+    return Promise.reject({
+      status: 400,
+      msg: "Invalid request, inc_votes must be a number",
+    });
+  }
   return db
     .query(`UPDATE comments SET votes = votes + $2 WHERE comment_id = $1`, [
       comment_id,

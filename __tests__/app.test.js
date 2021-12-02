@@ -59,9 +59,7 @@ describe("GET /api/reviews/:review_id", () => {
       .get("/api/reviews/hibernianfootballclub")
       .expect(400)
       .then((result) => {
-        expect(result.body.msg).toBe(
-          "Invalid request, review ID must be a number"
-        );
+        expect(result.body.msg).toBe("Invalid request, ID must be a number");
       });
   });
 
@@ -118,9 +116,7 @@ describe("PATCH /api/reviews/:review_id", () => {
       .send(votesToAdd)
       .expect(400)
       .then((result) => {
-        expect(result.body.msg).toBe(
-          "Invalid request, review ID must be a number"
-        );
+        expect(result.body.msg).toBe("Invalid request, ID must be a number");
       });
   });
 
@@ -273,9 +269,7 @@ describe("GET /api/reviews/:review_id/comments", () => {
       .get("/api/reviews/Hibernian/comments")
       .expect(400)
       .then((result) => {
-        expect(result.body.msg).toBe(
-          "Invalid request, review ID must be a number"
-        );
+        expect(result.body.msg).toBe("Invalid request, ID must be a number");
       });
   });
 
@@ -323,9 +317,7 @@ describe("POST /api/reviews/:review_id/comments", () => {
       .send(comment)
       .expect(400)
       .then((result) => {
-        expect(result.body.msg).toBe(
-          "Invalid request, review ID must be a number"
-        );
+        expect(result.body.msg).toBe("Invalid request, ID must be a number");
       });
   });
 
@@ -384,9 +376,7 @@ describe("DELETE /api/comments/:comment_id", () => {
       .delete("/api/comments/Hibernian")
       .expect(400)
       .then((result) => {
-        expect(result.body.msg).toBe(
-          "Invalid request, review ID must be a number"
-        );
+        expect(result.body.msg).toBe("Invalid request, ID must be a number");
       });
   });
 
@@ -492,8 +482,42 @@ describe("PATCH /api/comments/:comment_id", () => {
       .send(newVotes)
       .expect(200)
       .then((result) => {
-        console.log(result.body);
         expect(result.body.updatedComment.votes).toBe(6);
+      });
+  });
+
+  test("400: bad request response sent when given invalid comment_id", () => {
+    const votesToAdd = { inc_votes: -10 };
+    return request(app)
+      .patch("/api/comments/number")
+      .send(votesToAdd)
+      .expect(400)
+      .then((result) => {
+        expect(result.body.msg).toBe("Invalid request, ID must be a number");
+      });
+  });
+
+  test("400: bad request response sent when given invalid votes to add", () => {
+    const votesToAdd = { inc_votes: "number" };
+    return request(app)
+      .patch("/api/comments/1")
+      .send(votesToAdd)
+      .expect(400)
+      .then((result) => {
+        expect(result.body.msg).toBe(
+          "Invalid request, inc_votes must be a number"
+        );
+      });
+  });
+
+  test("404: responds with 404 if no record exists", () => {
+    const votesToAdd = { inc_votes: 10 };
+    return request(app)
+      .patch("/api/comments/32")
+      .send(votesToAdd)
+      .expect(404)
+      .then((result) => {
+        expect(result.body.msg).toBe("Comment not found");
       });
   });
 });

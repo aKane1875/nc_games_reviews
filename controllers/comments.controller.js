@@ -47,8 +47,12 @@ exports.deleteCommentById = (req, res, next) => {
 exports.patchCommentById = (req, res, next) => {
   const { comment_id } = req.params;
   const { inc_votes } = req.body;
-  updateCommentById(comment_id, inc_votes)
-    .then((updatedComment) => {
+  return Promise.all([
+    updateCommentById(comment_id, inc_votes),
+    checkIfCommentExists(comment_id),
+  ])
+
+    .then(([updatedComment]) => {
       res.status(200).send({ updatedComment });
     })
     .catch(next);
