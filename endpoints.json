@@ -114,5 +114,17 @@
   },
   "DELETE /api/comments/:comment_id": {
     "description": "Deletes a given comment by the comment_id and serves a 204 status code, no content"
+  },
+
+  "GET /api/users": {
+    "description": "Serves an array of objects containing usernames for all users",
+    "expectedResponse": {
+      "users": [
+        { "username": "mallionaire" },
+        { "username": "philippaclaire9" },
+        { "username": "bainesface" },
+        { "username": "dav3rid" }
+      ]
+    }
   }
 }

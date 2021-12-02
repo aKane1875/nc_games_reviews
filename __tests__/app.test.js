@@ -420,15 +420,15 @@ describe("GET /api/users", () => {
     return request(app)
       .get("/api/users")
       .expect(200)
-      .then(
-        expect((result) => {
+      .then((result) => {
+        expect(
           result.body.users.forEach((user) => {
             expect.objectContaining({
               username: expect.any(String),
             });
-          });
-        })
-      );
+          })
+        );
+      });
   });
 
   test("404: responds with 404 if error in path", () => {
