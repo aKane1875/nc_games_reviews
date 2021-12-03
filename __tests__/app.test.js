@@ -852,3 +852,27 @@ describe("POST /api/categories", () => {
     return request(app).post("/api/kategories").send(newCategory).expect(404);
   });
 });
+
+describe("DELETE /api/reviews/review_id", () => {
+  test("204, deletes review and respnds with a 204 status", () => {
+    return request(app).delete("/api/reviews/1").expect(204);
+  });
+
+  test("400: bad request, invalid review_id", () => {
+    return request(app)
+      .delete("/api/reviews/three")
+      .expect(400)
+      .then((result) => {
+        expect(result.body.msg).toBe("Invalid request, ID must be a number");
+      });
+  });
+
+  test("404: review not found", () => {
+    return request(app)
+      .delete("/api/reviews/14")
+      .expect(404)
+      .then((result) => {
+        expect(result.body.msg).toBe("Review not found");
+      });
+  });
+});

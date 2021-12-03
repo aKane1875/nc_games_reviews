@@ -194,5 +194,8 @@
         "description": "Games that require nothing but sheer luck"
       }
     }
+  },
+  "DELETE /api/reviews/:review_id": {
+    "description": "Deletes a give review based by thereview_id and serves a 204 status code, no content "
   }
 }
