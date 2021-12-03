@@ -2,7 +2,7 @@
 
 This RESTful API was built using node-postgres as part of the Northcoders programming bootcamp and is hosted on Heroku, link below. Initial project README docs provided by Northcoders are available in the project_information directory
 
-https://nc-games-reviews.herokuapp.com/
+https://nc-games-reviews.herokuapp.com/api
 
 This acts as a games review API, giving access to reviews and all related comments. Queries can be made, order can be arranged, reviews can be filtered by category. All available routes available by visiting the /api endpoint.
 
