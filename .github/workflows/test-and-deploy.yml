@@ -19,7 +19,7 @@ jobs:
       - name: Install dependencies
         run: npm install
       - name: Test everything
-        run: PGDATABASE=test_db PGUSER=joe_bloggs PGPASSWORD=Pas5Wurd npm test
+        run: PGDATABASE=test_db PGUSER=joe_bloggs PGPASSWORD=Pas5WuRd npm test
 
   deploy:
     runs-on: ubuntu-latest
