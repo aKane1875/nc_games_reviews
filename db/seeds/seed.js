@@ -38,7 +38,7 @@ const seed = (data) => {
         votes INT DEFAULT 0,
         category VARCHAR REFERENCES categories(slug),
         owner VARCHAR REFERENCES users(username),
-        created_at DATE 
+        created_at DATE NOT NULL DEFAULT CURRENT_DATE
       )`);
     })
     .then(() => {

@@ -402,6 +402,7 @@ describe("POST /api/reviews/:review_id/comments", () => {
     const comment = {
       username: "dav3rid",
     };
+    ``;
     return request(app)
       .post("/api/reviews/2/comments")
       .send(comment)
@@ -595,6 +596,39 @@ describe("PATCH /api/comments/:comment_id", () => {
       .expect(404)
       .then((result) => {
         expect(result.body.msg).toBe("Comment not found");
+      });
+  });
+});
+
+describe("POST /api/reviews", () => {
+  test("200: posts a new review and responds with new review obj inc review_id, votes, created_at and comment_count", () => {
+    const newReview = {
+      owner: "dav3rid",
+      title: "Jaws: The Board Game",
+      review_body:
+        "Just when you though it was safe to go back to the table....",
+      designer: "Not got a clue",
+      category: "dexterity",
+    };
+
+    return request(app)
+      .post("/api/reviews")
+      .send(newReview)
+      .expect(200)
+      .then((result) => {
+        expect(result.body.review).toEqual(
+          expect.objectContaining({
+            owner: expect.any(String),
+            title: expect.any(String),
+            review_body: expect.any(String),
+            designer: expect.any(String),
+            category: expect.any(String),
+            review_id: expect.any(Number),
+            votes: expect.any(Number),
+            created_at: expect.any(String),
+            comment_count: expect.any(String),
+          })
+        );
       });
   });
 });

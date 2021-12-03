@@ -3,6 +3,7 @@ const {
   updateReviewById,
   selectReviews,
   checkIfReviewExists,
+  insertNewReview,
 } = require("../models/reviews.model");
 
 exports.getReviewById = (req, res, next) => {
@@ -38,4 +39,13 @@ exports.getReviews = (req, res, next) => {
       res.status(200).send({ total_count: reviews.length, reviews });
     })
     .catch(next);
+};
+
+exports.postNewReview = (req, res, next) => {
+  const { owner, title, review_body, designer, category } = req.body;
+  insertNewReview(owner, title, review_body, designer, category).then(
+    (review) => {
+      res.status(200).send({ review });
+    }
+  );
 };

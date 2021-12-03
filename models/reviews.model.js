@@ -112,3 +112,20 @@ exports.checkIfReviewExists = (review_id) => {
       }
     });
 };
+
+exports.insertNewReview = (owner, title, review_body, designer, category) => {
+  return db
+    .query(
+      `INSERT INTO reviews (owner, title, review_body, designer, category) VALUES ($1, $2, $3, $4, $5) RETURNING *`,
+      [owner, title, review_body, designer, category]
+    )
+    .then((response) => {
+      return db.query(
+        `SELECT owner, title, review_body, designer, category, reviews.review_id, reviews.votes, reviews.created_at, COUNT(reviews.review_id = comments.review_id) AS comment_count FROM reviews LEFT JOIN comments ON reviews.review_id = comments.review_id WHERE reviews.review_id = $1 GROUP BY reviews.review_id`,
+        [response.rows[0].review_id]
+      );
+    })
+    .then((response) => {
+      return response.rows[0];
+    });
+};
