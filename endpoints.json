@@ -181,5 +181,18 @@
         "comment_count": "0"
       }
     }
+  },
+  "POST /api/categories": {
+    "description": "Posts a new category and serves a new category object",
+    "requests": {
+      "slug": "String, category name",
+      "description": "String, category description"
+    },
+    "exampleResponse": {
+      "category": {
+        "slug": "random luck",
+        "description": "Games that require nothing but sheer luck"
+      }
+    }
   }
 }

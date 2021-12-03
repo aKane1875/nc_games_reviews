@@ -18,3 +18,25 @@ exports.checkIfCategoryExists = (category) => {
       }
     });
 };
+
+exports.insertCategory = (slug, description) => {
+  if (!slug || !description) {
+    return Promise.reject({
+      status: 400,
+      msg: "Error: posts require both a slug and description",
+    });
+  } else if (typeof slug !== "string" || typeof description !== "string") {
+    return Promise.reject({
+      status: 400,
+      msg: "Error: strings only acceptable data type in category posts",
+    });
+  }
+  return db
+    .query(
+      `INSERT INTO categories (slug, description) VALUES ($1, $2) RETURNING *`,
+      [slug, description]
+    )
+    .then((response) => {
+      return response.rows[0];
+    });
+};

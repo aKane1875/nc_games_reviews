@@ -792,3 +792,63 @@ describe("POST /api/reviews", () => {
       });
   });
 });
+
+describe("POST /api/categories", () => {
+  test("200: Posts a new category and returns a category object with newly added category", () => {
+    const newCategory = {
+      slug: "random luck",
+      description: "Games that require nothing but sheer luck",
+    };
+    return request(app)
+      .post("/api/categories")
+      .send(newCategory)
+      .expect(200)
+      .then((result) => {
+        expect(result.body.category).toEqual(
+          expect.objectContaining({
+            slug: expect.any(String),
+            description: expect.any(String),
+          })
+        );
+      });
+  });
+
+  test("400: Returns error message if either slug or description key missing", () => {
+    const newCategory = {
+      description: "Games that require nothing but sheer luck",
+    };
+    return request(app)
+      .post("/api/categories")
+      .send(newCategory)
+      .expect(400)
+      .then((result) => {
+        expect(result.body.msg).toBe(
+          "Error: posts require both a slug and description"
+        );
+      });
+  });
+
+  test("400: Returns error message if either slug or description are invalid data type (non strings)", () => {
+    const newCategory = {
+      slug: "Random luck",
+      description: 35,
+    };
+    return request(app)
+      .post("/api/categories")
+      .send(newCategory)
+      .expect(400)
+      .then((result) => {
+        expect(result.body.msg).toBe(
+          "Error: strings only acceptable data type in category posts"
+        );
+      });
+  });
+
+  test("404: Invalid path", () => {
+    const newCategory = {
+      slug: "Random luck",
+      description: "No skill involved",
+    };
+    return request(app).post("/api/kategories").send(newCategory).expect(404);
+  });
+});
