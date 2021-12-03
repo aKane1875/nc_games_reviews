@@ -631,4 +631,164 @@ describe("POST /api/reviews", () => {
         );
       });
   });
+
+  test("400: responds with error message when owner is not an existing owner", () => {
+    const newReview = {
+      owner: "John",
+      title: "Jaws: The Board Game",
+      review_body:
+        "Just when you though it was safe to go back to the table....",
+      designer: "Not got a clue",
+      category: "dexterity",
+    };
+
+    return request(app)
+      .post("/api/reviews")
+      .send(newReview)
+      .expect(400)
+      .then((result) => {
+        expect(result.body.msg).toBe("Invalid owner, must be existing user");
+      });
+  });
+
+  test("400: responds with error message when category is not an existing category", () => {
+    const newReview = {
+      owner: "dav3rid",
+      title: "Jaws: The Board Game",
+      review_body:
+        "Just when you though it was safe to go back to the table....",
+      designer: "Not got a clue",
+      category: "eating folk as a shark",
+    };
+
+    return request(app)
+      .post("/api/reviews")
+      .send(newReview)
+      .expect(400)
+      .then((result) => {
+        expect(result.body.msg).toBe(
+          "Invalid category, must be existing category"
+        );
+      });
+  });
+
+  test("400: responds with error message if title key is missing in req body", () => {
+    const newReview = {
+      owner: "dav3rid",
+
+      review_body:
+        "Just when you though it was safe to go back to the table....",
+      designer: "Not got a clue",
+      category: "dexterity",
+    };
+
+    return request(app)
+      .post("/api/reviews")
+      .send(newReview)
+      .expect(400)
+      .then((result) => {
+        expect(result.body.msg).toBe(
+          "Posts require an owner, review_body, designer and category"
+        );
+      });
+  });
+
+  test("400: responds with error message if owner key is missing in req body", () => {
+    const newReview = {
+      title: "Jaws: The Board Game",
+      review_body:
+        "Just when you though it was safe to go back to the table....",
+      designer: "Not got a clue",
+      category: "dexterity",
+    };
+
+    return request(app)
+      .post("/api/reviews")
+      .send(newReview)
+      .expect(400)
+      .then((result) => {
+        expect(result.body.msg).toBe(
+          "Posts require an owner, review_body, designer and category"
+        );
+      });
+  });
+  test("400: responds with error message if review_body key is missing in req body", () => {
+    const newReview = {
+      owner: "dav3rid",
+      title: "Jaws: The Board Game",
+
+      designer: "Not got a clue",
+      category: "dexterity",
+    };
+
+    return request(app)
+      .post("/api/reviews")
+      .send(newReview)
+      .expect(400)
+      .then((result) => {
+        expect(result.body.msg).toBe(
+          "Posts require an owner, review_body, designer and category"
+        );
+      });
+  });
+  test("400: responds with error message if designer key is missing in req body", () => {
+    const newReview = {
+      owner: "dav3rid",
+      title: "Jaws: The Board Game",
+      review_body:
+        "Just when you though it was safe to go back to the table....",
+      category: "dexterity",
+    };
+
+    return request(app)
+      .post("/api/reviews")
+      .send(newReview)
+      .expect(400)
+      .then((result) => {
+        expect(result.body.msg).toBe(
+          "Posts require an owner, review_body, designer and category"
+        );
+      });
+  });
+
+  test("400: responds with error message category key is missing in req body", () => {
+    const newReview = {
+      owner: "dav3rid",
+      title: "Jaws: The Board Game",
+      review_body:
+        "Just when you though it was safe to go back to the table....",
+      designer: "Not got a clue",
+    };
+
+    return request(app)
+      .post("/api/reviews")
+      .send(newReview)
+      .expect(400)
+      .then((result) => {
+        expect(result.body.msg).toBe(
+          "Posts require an owner, review_body, designer and category"
+        );
+      });
+  });
+
+  test("400: responds with error message when passed invalid data type on any key (all strings)", () => {
+    const newReview = {
+      owner: "dav3rid",
+      title: 7,
+      review_body:
+        "Just when you though it was safe to go back to the table....",
+      designer: "Not got a clue",
+      category: "dexterity",
+    };
+
+    return request(app)
+      .post("/api/reviews")
+      .send(newReview)
+      .expect(400)
+      .then((result) => {
+        expect(result.body.msg).toBe(
+          "Invalid data type, only strings accepted in request"
+        );
+      });
+  });
 });

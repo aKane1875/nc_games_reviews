@@ -6,6 +6,9 @@ const {
   insertNewReview,
 } = require("../models/reviews.model");
 
+const { checkIfUserExists } = require("../models/users.model");
+const { checkIfCategoryExists } = require("../models/categories.model");
+
 exports.getReviewById = (req, res, next) => {
   const { review_id } = req.params;
   return Promise.all([
@@ -43,9 +46,13 @@ exports.getReviews = (req, res, next) => {
 
 exports.postNewReview = (req, res, next) => {
   const { owner, title, review_body, designer, category } = req.body;
-  insertNewReview(owner, title, review_body, designer, category).then(
-    (review) => {
+  return Promise.all([
+    checkIfUserExists(owner),
+    checkIfCategoryExists(category),
+    insertNewReview(owner, title, review_body, designer, category),
+  ])
+    .then(([, , review]) => {
       res.status(200).send({ review });
-    }
-  );
+    })
+    .catch(next);
 };

@@ -158,5 +158,28 @@
         "body": "My dog loved this game too!"
       }
     }
+  },
+  "POST /api/reviews": {
+    "description": "Post a new review and serves a review object with details of the new review",
+    "requests": {
+      "owner": "String, existing username",
+      "title": "String",
+      "review_body": "String",
+      "designer": "String",
+      "category": "String, existing category"
+    },
+    "exampleResponse": {
+      "review": {
+        "owner": "dav3rid",
+        "title": "Jaws: The Board Game",
+        "review_body": "Just when you though it was safe to go back to the table....",
+        "designer": "Not got a clue",
+        "category": "dexterity",
+        "review_id": 14,
+        "votes": 0,
+        "created_at": "2021-12-03T00:00:00.000Z",
+        "comment_count": "0"
+      }
+    }
   }
 }

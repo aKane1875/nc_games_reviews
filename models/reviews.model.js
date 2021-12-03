@@ -114,6 +114,23 @@ exports.checkIfReviewExists = (review_id) => {
 };
 
 exports.insertNewReview = (owner, title, review_body, designer, category) => {
+  if (!owner || !title || !review_body || !designer || !category) {
+    return Promise.reject({
+      status: 400,
+      msg: "Posts require an owner, review_body, designer and category",
+    });
+  } else if (
+    typeof owner !== "string" ||
+    typeof title !== "string" ||
+    typeof review_body !== "string" ||
+    typeof designer !== "string" ||
+    typeof category !== "string"
+  ) {
+    return Promise.reject({
+      status: 400,
+      msg: "Invalid data type, only strings accepted in request",
+    });
+  }
   return db
     .query(
       `INSERT INTO reviews (owner, title, review_body, designer, category) VALUES ($1, $2, $3, $4, $5) RETURNING *`,

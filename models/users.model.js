@@ -16,3 +16,16 @@ exports.selectUserByUsername = (username) => {
       return response.rows[0];
     });
 };
+
+exports.checkIfUserExists = (username) => {
+  return db
+    .query(`SELECT * FROM users WHERE username = $1`, [username])
+    .then((response) => {
+      if (response.rows.length === 0) {
+        return Promise.reject({
+          status: 400,
+          msg: "Invalid owner, must be existing user",
+        });
+      }
+    });
+};
